@@ -1,10 +1,10 @@
 export function spitMessage(str){
-    let temp = str.split('/')[1];
     let recv = {
       namespace: '',
       func: '',
-      massage: '',
+      massage: [],
     };
+    let temp = str.split('/')[1];
     if(typeof temp == 'string'){
       try{
         recv.namespace = temp.split(',')[0];
@@ -16,10 +16,13 @@ export function spitMessage(str){
       }catch (e){
         recv.func = '';
       }
-      try{
-        recv.massage = JSON.parse(temp.match(/{["',:-_a-z{}0-9-.\/A-ZА-Яа-я &]*}/gm))
-      }catch (e){
-        recv.massage = '';
+      let tmp= str.slice(0,-1).match(/\[{[{"',:-_a-z{}0-9-.\/A-ZА-Яа-я %&}]*/gm)
+      if(tmp){
+        recv.massage = JSON.parse(tmp[0]);
+      }else{
+        tmp = str.match(/{[{"',:-_a-z{}0-9-.\/A-ZА-Яа-я %&}]*}/gm)
+        if(tmp)
+          console.log(tmp);
       }
     }
     return recv;
