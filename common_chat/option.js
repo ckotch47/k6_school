@@ -1,6 +1,6 @@
 const myOptions = {
-    vus: 1,
-    duration: '10s',
+    vus: 6,
+    duration: '5m',
   }
 
 module.exports  = myOptions

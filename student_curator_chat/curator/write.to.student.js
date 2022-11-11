@@ -1,27 +1,28 @@
-import { check, sleep } from 'k6';
+import { sleep } from 'k6';
 
 
-const curatorChat = {
-    index: 0,
-    userId: '',
+const studentChat = {
+    index: 1,
+    userId: 'baea9cd0-2eb7-42b9-b040-9c7a42b11531',
     type: 'CURATOR',
     groupId: '',
     conversationId: ''
 }
-class WriteToCurator{
-    close(data) {
-        // console.log(data);
+
+class WriteToStudent{
+    close(data){
+
     };
-    
+
     pong(socket){
         socket.send('3');
-    };
+    }
 
     open(socket, token){
         socket.send(`40/chat,{"token":"Bearer ${token}"}`);
         sleep(1);
         socket.send(`42/chat,["get_contacts"]`);
-    };
+    }
 
     message(socket, data){
         if(data){
@@ -32,34 +33,34 @@ class WriteToCurator{
             switch(recv.namespace){
               case 'chat':
                 if(recv.func === 'show_contacts'){
-                    curatorChat.index = recv.massage.findIndex((val)=>val.type==='CURATOR')
-                    curatorChat.userId = recv.massage[curatorChat.index].user.id;
-                    curatorChat.groupId = recv.massage[curatorChat.index].group.id;
+                    studentChat.index = recv.massage.findIndex((val)=>val.type==='CURATOR' && val.user.id === studentChat.userId)
+                    studentChat.userId = recv.massage[studentChat.index].user.id;
+                    studentChat.groupId = recv.massage[studentChat.index].group.id;
                     socket.send(`42/chat,["select_contact", ${JSON.stringify({
-                        groupId: curatorChat.groupId,
+                        groupId: studentChat.groupId,
                         id: null,
                         relationUserId: null,
-                        type: curatorChat.type,
-                        userId: curatorChat.userId
+                        type: studentChat.type,
+                        userId: studentChat.userId
                     })}]`);
                 }
                 if(recv.func === 'open_chat'){
-                    curatorChat.conversationId = recv.massage.conversationId;
+                    studentChat.conversationId = recv.massage.conversationId;
                     socket.send(`42/chat,["join",${JSON.stringify({
-                        conversationId: curatorChat.conversationId
+                        conversationId: studentChat.conversationId
                     })}]`);
                     // 
                 }
                 if(recv.func === 'joined'){
                     socket.send(`42/chat,["get_history", ${JSON.stringify({
-                        conversationId: curatorChat.conversationId,
+                        conversationId: studentChat.conversationId,
                         limit: 1,
                     })}]`)
                 }
                 if(recv.func === 'show_history'){
                     socket.send(`42/chat,["send_message", ${JSON.stringify({
-                        conversationId: curatorChat.conversationId,
-                        text: 'socket k6 load',
+                        conversationId: studentChat.conversationId,
+                        text: 'socket k6 load - curator',
                         uploads: [],
                     })}]`)
                 }
@@ -91,24 +92,18 @@ class WriteToCurator{
           }
           let tmp;
             if(recv.func == 'show_contacts'){
-                tmp= str.slice(0,-1).match(/\[{[{"',:-_a-z{}0-9-.\/A-ZА-Яа-я %&}]*/gm)
+                tmp = str.slice(0,-1).match(/\[{.+}]/gm)
                 if(tmp){
                     recv.massage = JSON.parse(tmp[0]);
                 }
             }
-            if(recv.func == 'open_chat'){
-                tmp = str.match(/{[{"',:-_a-z{}0-9-.\/A-ZА-Яа-я %&+}]*}/gm)
+            if(recv.func == 'open_chat' || recv.func == 'joined'){
+                tmp = str.match(/{.+}/gm)
                 if(tmp)
                     recv.massage = JSON.parse(tmp);
-            }
-            if(recv.func == 'joined'){
-                tmp = str.slice(0,-1).match(/{[{"',:-_a-z{}0-9-.\/A-ZА-Яа-я %&+}]*}*/gm)
-                if(tmp)
-                    recv.massage = JSON.parse(tmp);
-            }            
+            }       
         }
         return recv;
       }
 }
-
-module.exports = new WriteToCurator()
+module.exports = new WriteToStudent()
