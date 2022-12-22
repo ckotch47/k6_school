@@ -1,7 +1,6 @@
 const writeCurator = require('./write.to.curator.js');
 
 export function studentTest(socket, main_data) { 
-
     socket.on('close', (data) => writeCurator.close(data));
     
     socket.on('2', ()=> writeCurator.pong(socket));

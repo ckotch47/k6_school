@@ -9,7 +9,7 @@ export const options = myOptions;
 
 
 export default function () { 
-  
+
   if(__VU%2 ==0 ){
     let main_data = mySetup.setupCurator()
     ws.connect(settings.wsConnect, {}, function (socket) {

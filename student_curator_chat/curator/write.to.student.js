@@ -28,7 +28,7 @@ class WriteToStudent{
         if(data){
             let recv = this.spitMessage(data)
             if(recv.func === 'exception'){
-                console.log(recv.func);
+                console.log(recv);
                 socket.send('close');
             }
             switch(recv.namespace){

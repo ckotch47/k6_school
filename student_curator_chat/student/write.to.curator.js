@@ -27,7 +27,7 @@ class WriteToCurator{
         if(data){
             let recv = this.spitMessage(data)
             if(recv.func === 'exception'){
-                console.log(recv.func);
+                console.log(recv);
                 socket.send('close');
             }
             switch(recv.namespace){
@@ -65,7 +65,6 @@ class WriteToCurator{
                     })}]`)
                 }
                 if(recv.func === 'new_message'){
-                    // console.log('new_message');
                     socket.send('close');
                 }
             }
@@ -73,6 +72,7 @@ class WriteToCurator{
     }
 
     spitMessage(str){
+
         let recv = {
           namespace: '',
           func: '',

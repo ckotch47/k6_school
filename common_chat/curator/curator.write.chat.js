@@ -28,6 +28,7 @@ class CuratorWriteToCommonChat{
         if(data){
             let recv = this.spitMessage(data)
             if(recv.func === 'exception'){
+                console.log(recv);
                 socket.send('close');
             }
             switch(recv.namespace){
