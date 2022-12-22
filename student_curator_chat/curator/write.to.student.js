@@ -11,7 +11,7 @@ const studentChat = {
 
 class WriteToStudent{
     close(data){
-
+        
     };
 
     pong(socket){
@@ -28,6 +28,7 @@ class WriteToStudent{
         if(data){
             let recv = this.spitMessage(data)
             if(recv.func === 'exception'){
+                console.log(recv.func);
                 socket.send('close');
             }
             switch(recv.namespace){
@@ -49,7 +50,6 @@ class WriteToStudent{
                     socket.send(`42/chat,["join",${JSON.stringify({
                         conversationId: studentChat.conversationId
                     })}]`);
-                    // 
                 }
                 if(recv.func === 'joined'){
                     socket.send(`42/chat,["get_history", ${JSON.stringify({

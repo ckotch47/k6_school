@@ -24,8 +24,8 @@ export function setupCurator() {
 export function setupTeacher(){
   const url = `${settings.httpConnect}/api/auth`;
   const payload ={
-    login: "teacher@mail.ru",
-    password: "qwer1234",
+    login: "teacher@mail.ru", // onlinelive56@bk.ru
+    password: "a791c98f-1cd8-4199-a968-28d144df60dd",
   };
 
   return  {token: http.post(url, payload).json().accessToken};
@@ -35,7 +35,7 @@ export function setupParent(){
   const url = `${settings.httpConnect}/api/auth`;
   const payload ={
     login: "hamster123789@yandex.ru",
-    password: "qwer1234",
+    password: "a791c98f-1cd8-4199-a968-28d144df60dd",
   };
 
   return  {token: http.post(url, payload).json().accessToken};

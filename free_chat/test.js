@@ -1,4 +1,4 @@
-const myOptions = require("./option.js");
+const myOptions = require("../common/option.js");
 const settings = require('../common/settings.js');
 const mySetup = require('../common/setup.js');
 const testStudent = require('./student/test.js');
